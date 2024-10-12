@@ -1,4 +1,5 @@
 export enum TokenType {
+	Null,
 	Number,
 	Identifier,
 	Equals,
@@ -6,6 +7,7 @@ export enum TokenType {
 	CloseParen,
 	BinaryOperator,
 	Let,
+	EOF,
 }
 
 const KEYWORDS: Record<string, TokenType> = {
@@ -47,7 +49,8 @@ export function tokenize(sourceCode: string): Token[] {
 		} else if (src[0] == ")") {
 			tokens.push(token(src.shift(), TokenType.CloseParen));
 		} 
-		else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/") {
+		else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" ||
+			src[0] == "%") {
 			tokens.push(token(src.shift(), TokenType.BinaryOperator));
 		} 
 		else if (src[0] == "=") {
@@ -92,7 +95,7 @@ export function tokenize(sourceCode: string): Token[] {
 			}
 		}
 	}
-
+    tokens.push({type: TokenType.EOF, value: "EndOfFile"});
 	return tokens;
 }
 
