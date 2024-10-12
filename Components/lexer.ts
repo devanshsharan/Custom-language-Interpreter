@@ -12,6 +12,7 @@ export enum TokenType {
 
 const KEYWORDS: Record<string, TokenType> = {
 	let: TokenType.Let,
+	null: TokenType.Null,
 };
 
 
@@ -74,7 +75,7 @@ export function tokenize(sourceCode: string): Token[] {
 
 				const reserved = KEYWORDS[ident];
 				
-				if (reserved) {
+				if (typeof reserved == "number") {
 					tokens.push(token(ident, reserved));
 				} else {
 					
@@ -99,7 +100,3 @@ export function tokenize(sourceCode: string): Token[] {
 	return tokens;
 }
 
-const source = await Deno.readTextFile("./test.txt");
-for (const token of tokenize(source)){
-    console.log(token);
-}
