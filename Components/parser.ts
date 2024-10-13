@@ -3,7 +3,6 @@ import {
     Expr,
     Identifier,
     NumericLiteral,
-    NullLiteral,
     Program,
     Stmt,
   } from "./ast.ts";
@@ -100,10 +99,6 @@ import {
       switch (tk) {
         case TokenType.Identifier:
           return { kind: "Identifier", symbol: this.eat().value } as Identifier;
-
-        case TokenType.Null:
-          this.eat(); 
-          return { kind: "NullLiteral", value: "null" } as NullLiteral; 
   
         case TokenType.Number:
           return {
