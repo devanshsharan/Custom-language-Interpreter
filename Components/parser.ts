@@ -1,33 +1,52 @@
+// deno-lint-ignore-file no-explicit-any
 import {
   AssignmentExpr,
   BinaryExpr,
   Expr,
   Identifier,
   NumericLiteral,
+  ObjectLiteral,
   Program,
+  Property,
   Stmt,
   VarDeclaration,
 } from "./ast.ts";
 
 import { Token, tokenize, TokenType } from "./lexer.ts";
 
+/**
+ * Frontend for producing a valid AST from sourcode
+ */
 export default class Parser {
   private tokens: Token[] = [];
 
+  /*
+   * Determines if the parsing is complete and the END OF FILE Is reached.
+   */
   private not_eof(): boolean {
     return this.tokens[0].type != TokenType.EOF;
   }
 
+  /**
+   * Returns the currently available token
+   */
   private at() {
     return this.tokens[0] as Token;
   }
 
+  /**
+   * Returns the previous token and then advances the tokens array to the next value.
+   */
   private eat() {
     const prev = this.tokens.shift() as Token;
     return prev;
   }
 
-  private expect(type: TokenType, err: string | Error) {
+  /**
+   * Returns the previous token and then advances the tokens array to the next value.
+   *  Also checks the type of expected token and throws if the values dnot match.
+   */
+  private expect(type: TokenType, err: any) {
     const prev = this.tokens.shift() as Token;
     if (!prev || prev.type != type) {
       console.error("Parser Error:\n", err, prev, " - Expecting: ", type);
@@ -44,6 +63,7 @@ export default class Parser {
       body: [],
     };
 
+    // Parse until end of file
     while (this.not_eof()) {
       program.body.push(this.parse_stmt());
     }
@@ -51,8 +71,9 @@ export default class Parser {
     return program;
   }
 
+  // Handle complex statement types
   private parse_stmt(): Stmt {
-  
+    // skip to parse_expr
     switch (this.at().type) {
       case TokenType.Let:
       case TokenType.Const:
@@ -62,6 +83,8 @@ export default class Parser {
     }
   }
 
+  // LET IDENT;
+  // ( LET | CONST ) IDENT = EXPR;
   parse_var_declaration(): Stmt {
     const isConstant = this.eat().type == TokenType.Const;
     const identifier = this.expect(
@@ -70,7 +93,7 @@ export default class Parser {
     ).value;
 
     if (this.at().type == TokenType.Semicolon) {
-      this.eat(); 
+      this.eat(); // expect semicolon
       if (isConstant) {
         throw "Must assigne value to constant expression. No value provided.";
       }
@@ -102,15 +125,16 @@ export default class Parser {
     return declaration;
   }
 
+  // Handle expressions
   private parse_expr(): Expr {
     return this.parse_assignment_expr();
   }
 
-  parse_assignment_expr(): Expr {
-    const left = this.parse_additive_expr(); 
+  private parse_assignment_expr(): Expr {
+    const left = this.parse_object_expr();
 
     if (this.at().type == TokenType.Equals) {
-      this.eat();
+      this.eat(); // advance past equals
       const value = this.parse_assignment_expr();
       return { value, assigne: left, kind: "AssignmentExpr" } as AssignmentExpr;
     }
@@ -118,6 +142,51 @@ export default class Parser {
     return left;
   }
 
+  private parse_object_expr(): Expr {
+    // { Prop[] }
+    if (this.at().type !== TokenType.OpenBrace) {
+      return this.parse_additive_expr();
+    }
+
+    this.eat(); // advance past open brace.
+    const properties = new Array<Property>();
+
+    while (this.not_eof() && this.at().type != TokenType.CloseBrace) {
+      const key =
+        this.expect(TokenType.Identifier, "Object literal key exprected").value;
+
+      // Allows shorthand key: pair -> { key, }
+      if (this.at().type == TokenType.Comma) {
+        this.eat(); // advance past comma
+        properties.push({ key, kind: "Property" } as Property);
+        continue;
+      } // Allows shorthand key: pair -> { key }
+      else if (this.at().type == TokenType.CloseBrace) {
+        properties.push({ key, kind: "Property" });
+        continue;
+      }
+
+      // { key: val }
+      this.expect(
+        TokenType.Colon,
+        "Missing colon following identifier in ObjectExpr",
+      );
+      const value = this.parse_expr();
+
+      properties.push({ kind: "Property", value, key });
+      if (this.at().type != TokenType.CloseBrace) {
+        this.expect(
+          TokenType.Comma,
+          "Expected comma or closing bracket following property",
+        );
+      }
+    }
+
+    this.expect(TokenType.CloseBrace, "Object literal missing closing brace.");
+    return { kind: "ObjectLiteral", properties } as ObjectLiteral;
+  }
+
+  // Handle Addition & Subtraction Operations
   private parse_additive_expr(): Expr {
     let left = this.parse_multiplicitave_expr();
 
@@ -135,6 +204,7 @@ export default class Parser {
     return left;
   }
 
+  // Handle Multiplication, Division & Modulo Operations
   private parse_multiplicitave_expr(): Expr {
     let left = this.parse_primary_expr();
 
@@ -154,29 +224,40 @@ export default class Parser {
     return left;
   }
 
+  // Orders Of Prescidence
+  // AdditiveExpr
+  // MultiplicitaveExpr
+  // PrimaryExpr
+
+  // Parse Literal Values & Grouping Expressions
   private parse_primary_expr(): Expr {
     const tk = this.at().type;
 
+    // Determine which token we are currently at and return literal value
     switch (tk) {
+      // User defined values.
       case TokenType.Identifier:
         return { kind: "Identifier", symbol: this.eat().value } as Identifier;
 
+      // Constants and Numeric Constants
       case TokenType.Number:
         return {
           kind: "NumericLiteral",
           value: parseFloat(this.eat().value),
         } as NumericLiteral;
 
+      // Grouping Expressions
       case TokenType.OpenParen: {
-        this.eat(); 
+        this.eat(); // eat the opening paren
         const value = this.parse_expr();
         this.expect(
           TokenType.CloseParen,
           "Unexpected token found inside parenthesised expression. Expected closing parenthesis.",
-        ); 
+        ); // closing paren
         return value;
       }
 
+      // Unidentified Tokens and Invalid Code Reached
       default:
         console.error("Unexpected token found during parsing!", this.at());
         Deno.exit(1);
