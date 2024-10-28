@@ -1,12 +1,15 @@
-let foo = 45 / 2;
+fn makeAdder (offset) {
+  let w = 5;
+  fn add (x, y)  {
+    w = w + 1
+    x + y + offset + w
+  }
 
-const obj = {
-  x: 100,
-  y: 32,
-  foo,
-  complex: {
-    bar: true,
-  },
-};
+  add
+}
 
+const adder = makeAdder(1);
 
+print(adder(10, 5))
+print(adder(10, 5))
+print(adder(10, 5))
