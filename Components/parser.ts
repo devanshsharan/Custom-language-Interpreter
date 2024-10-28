@@ -13,6 +13,7 @@ import {
 	VarDeclaration,
 	FunctionDeclaration,
 } from "./ast.ts";
+import { resetOutput, getOutput } from "../sharedOutput.ts";
 
 import { Token, tokenize, TokenType } from "./lexer.ts";
 
@@ -80,7 +81,7 @@ export default class Parser {
 		for (const arg of args) {
 			if (arg.kind !== "Identifier") {
 				console.log(arg);
-				throw "Inside function declaration expected parameters to be of type string.";
+				throw new Error("Inside function declaration expected parameters to be of type string.");
 			}
 
 			params.push((arg as Identifier).symbol);
@@ -124,8 +125,10 @@ export default class Parser {
 
 		if (this.at().type == TokenType.Semicolon) {
 			this.eat(); 
+      const outputt = getOutput();
+      console.log(outputt);
 			if (isConstant) {
-				throw "Must assigne value to constant expression. No value provided.";
+				throw new Error("Must assigne value to constant expression. No value provided.");
 			}
 
 			return {
@@ -273,7 +276,8 @@ export default class Parser {
 		if (this.at().type == TokenType.OpenParen) {
 			call_expr = this.parse_call_expr(call_expr);
 		}
-
+    console.log(call_expr);
+    console.log(4);
 		return call_expr;
 	}
 

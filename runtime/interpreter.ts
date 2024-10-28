@@ -10,6 +10,7 @@ import {
 	Program,
 	Stmt,
 	VarDeclaration,
+  MemberExpr,
 } from "../Components/ast.ts";
 import Environment from "./environment.ts";
 import {
@@ -23,6 +24,7 @@ import {
 	eval_call_expr,
 	eval_identifier,
 	eval_object_expr,
+  eval_member_expr,
 } from "./eval/expressions.ts";
 
 export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
@@ -44,12 +46,14 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
 			return eval_binary_expr(astNode as BinaryExpr, env);
 		case "Program":
 			return eval_program(astNode as Program, env);
-		
+		// Handle statements
 		case "VarDeclaration":
 			return eval_var_declaration(astNode as VarDeclaration, env);
 		case "FunctionDeclaration":
 			return eval_function_declaration(astNode as FunctionDeclaration, env);
-		
+      case "MemberExpr":
+        return eval_member_expr(astNode as MemberExpr, env);
+		// Handle unimplimented ast types as error.
 		default:
 			console.error(
 				"This AST Node has not yet been setup for interpretation.\n",

@@ -1,11 +1,9 @@
 export enum TokenType {
 	Number,
 	Identifier,
-	
 	Let,
 	Const,
 	Fn, 
-
 	BinaryOperator,
 	Equals,
 	Comma,

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Runner</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.0/prism.min.js"></script> <!-- For syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.0/themes/prism.css" rel="stylesheet" /> <!-- Prism CSS -->
+</head>
+<body>
+    <div class="container">
+        <h1>Code Runner</h1>
+        <div class="editor-container">
+            <div class="button-container" id="button-container"></div> <!-- Button container -->
+            <textarea id="code-input" placeholder=" Write your code here "></textarea>
+            <div class="button-group">
+                <button id="run-button">Run Code</button>
+                <button id="reset-button">Reset Input</button>
+            </div>
+        </div>
+        <h2>Output</h2>
+        <pre id="output" class="output" contenteditable="true"></pre>
+    </div>
+
+    <script type="module">
+        import { runCode } from "./main.ts";
+
+        async function executeCode() {
+            const codeInput = document.getElementById("code-input").value;
+            const output = await runCode(codeInput);
+            document.getElementById("output").textContent = output;
+            Prism.highlightElement(document.getElementById("output")); // Apply syntax highlighting
+        }
+
+        function resetInput() {
+            document.getElementById("code-input").value = '';
+            document.getElementById("output").textContent = '';
+        }
+
+        // Function to add buttons dynamically
+        function addButtons() {
+            const buttonContainer = document.getElementById('button-container');
+            const buttonData = [
+                
+                { 
+        code: "let a = 54 * 65;\nprint(a)\n\na = a / 2\nprint(a)\n\nprint(a = 8)", 
+        text: "Let" 
+    },
+    { 
+        code: "const d = 8;\n\nprint(d)\n\nd = 7\n\nprint(d * 3)", 
+        text: "Const" 
+    },
+                { 
+        code: "let a = 10;\nlet b = 3;\nlet c = 5;\n\nlet d = a - c * 2;\nlet e = a + b * 2 - (a / b);\nlet f = (a * b) % 4 + (a - b * 2);\nlet g = (a + b) / 2 * (a - b) + a % b;\n\nprint(d)\nprint(e)\nprint(f)\nprint(g)", 
+        text: "Arithmetic" 
+    },
+    { 
+        code: "let a = 5;\nprint(a)\n\nfn checkScope() {\n    let b = 9;\n    a = a * 3\n}\n\ncheckScope()\n\nprint(a)\nprint(b)", 
+        text: "Scope" 
+    },
+    { 
+            code: "const obj = {\n    x: 100,\n    y: 32,\n};\n\nlet f = obj[x];\nprint(f)", 
+            text: "Object" 
+        },
+    {
+        code: `
+let alpha = 38;
+
+const obj = {
+    x: 100,
+    y: 32,
+    alpha: alpha,
+    complex: {
+        bar: true,
+    },
+};
+
+let f = obj.complex.bar;
+print(f)
+alpha = obj.alpha + 5
+print(alpha)
+        `,
+        text: "Member Expr"
+    },
+                { 
+    code: `
+fn makeAdder(offset) {
+    let f = 5;
+    fn add(x, y) {
+        f = f + 1
+        x + y + offset + f
+    }
+    add
+}
+
+const adder = makeAdder(1);
+
+print(adder(10, 5))
+print(adder(10, 5))
+print(adder(10, 5))
+`, text: "Closure"
+}
+            ];
+
+            buttonData.forEach(({ code, text }) => {
+                const button = document.createElement('button');
+                button.className = 'code-button';
+                button.textContent = text;
+                button.addEventListener('click', () => {
+                    // Set the textarea value to the new code, resetting any previous code
+                    document.getElementById("code-input").value = code;
+                });
+                buttonContainer.appendChild(button);
+            });
+        }
+
+        // Initialize buttons on page load
+        addButtons();
+
+        window.executeCode = executeCode;
+        document.getElementById("run-button").addEventListener("click", executeCode);
+        document.getElementById("reset-button").addEventListener("click", resetInput);
+    </script>
+</body>
+</html>
+
+
+
+
+

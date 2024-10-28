@@ -6,6 +6,8 @@ import {
 	RuntimeVal,
 } from "./values.ts";
 
+import { appendOutput } from "../sharedOutput.ts";
+
 export function createGlobalEnv() {
 	const env = new Environment();
 	env.declareVar("true", MK_BOOL(true), true);
@@ -15,7 +17,10 @@ export function createGlobalEnv() {
 	env.declareVar(
 		"print",
 		MK_NATIVE_FN((args, scope) => {
-			console.log(...args);
+      console.log(...args);
+			const message = args.map(arg => JSON.stringify(arg)).join(" ");
+      console.log(message + 1);
+      appendOutput(message);
 			return MK_NULL();
 		}),
 		true
@@ -53,6 +58,8 @@ export default class Environment {
 		if (constant) {
 			this.constants.add(varname);
 		}
+    console.log(value);
+    console.log(99);
 		return value;
 	}
 
@@ -60,7 +67,7 @@ export default class Environment {
 		const env = this.resolve(varname);
 
 		if (env.constants.has(varname)) {
-			throw `Cannot reasign to variable ${varname} as it was declared constant.`;
+			throw new Error(`Cannot reasign to variable ${varname} as it was declared constant.`);
 		}
 
 		env.variables.set(varname, value);
@@ -78,7 +85,7 @@ export default class Environment {
 		}
 
 		if (this.parent == undefined) {
-			throw `Cannot resolve '${varname}' as it does not exist.`;
+			throw new Error(`Cannot resolve '${varname}' as it does not exist.`);
 		}
 
 		return this.parent.resolve(varname);

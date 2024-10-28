@@ -4,6 +4,7 @@ import {
 	CallExpr,
 	Identifier,
 	ObjectLiteral,
+  MemberExpr,
 } from "../../Components/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
@@ -29,12 +30,41 @@ function eval_numeric_binary_expr(
 	} else if (operator == "*") {
 		result = lhs.value * rhs.value;
 	} else if (operator == "/") {
+		// TODO: Division by zero checks
 		result = lhs.value / rhs.value;
 	} else {
 		result = lhs.value % rhs.value;
 	}
 
 	return { value: result, type: "number" };
+}
+
+/**
+ * Evaulates expressions following the binary operation type.
+ */
+
+export function eval_member_expr(
+	memberExpr: MemberExpr,
+	env: Environment
+): RuntimeVal {
+	// Evaluate the object part of the expression
+	const object = evaluate(memberExpr.object, env);
+
+	// Ensure the object is an ObjectVal with properties
+	if (object.type !== "object") {
+		throw new Error(`Cannot access property on non-object: ${object.type}`);
+	}
+
+	// Get the property name from the member expression
+	const propName = (memberExpr.property as Identifier).symbol;
+
+	// Access the property in the object's properties map
+	const value = (object as ObjectVal).properties.get(propName);
+	if (!value) {
+		throw new Error(`Property '${propName}' does not exist on object`);
+	}
+
+	return value;
 }
 
 export function eval_binary_expr(
@@ -44,6 +74,7 @@ export function eval_binary_expr(
 	const lhs = evaluate(binop.left, env);
 	const rhs = evaluate(binop.right, env);
 
+	// Only currently support numeric operations
 	if (lhs.type == "number" && rhs.type == "number") {
 		return eval_numeric_binary_expr(
 			lhs as NumberVal,
@@ -52,6 +83,7 @@ export function eval_binary_expr(
 		);
 	}
 
+	// One or both are NULL
 	return MK_NULL();
 }
 
@@ -103,12 +135,16 @@ export function eval_call_expr(expr: CallExpr, env: Environment): RuntimeVal {
 		const func = fn as FunctionValue;
 		const scope = new Environment(func.declarationEnv);
 
+		// Create the variables for the parameters list
 		for (let i = 0; i < func.parameters.length; i++) {
+			// TODO Check the bounds here.
+			// verify arity of function
 			const varname = func.parameters[i];
 			scope.declareVar(varname, args[i], false);
 		}
 
 		let result: RuntimeVal = MK_NULL();
+		// Evaluate the function body line by line
 		for (const stmt of func.body) {
 			result = evaluate(stmt, scope);
 		}

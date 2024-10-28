@@ -1,29 +1,25 @@
 export type NodeType =
-	// STATEMENTS
 	| "Program"
 	| "VarDeclaration"
 	| "FunctionDeclaration"
-	// EXPRESSIONS
 	| "AssignmentExpr"
 	| "MemberExpr"
 	| "CallExpr"
-	// Literals
 	| "Property"
 	| "ObjectLiteral"
 	| "NumericLiteral"
 	| "Identifier"
 	| "BinaryExpr";
 
-/**
- * Statements do not result in a value at runtime.
+/* Statements do not result in a value at runtime.
  They contain one or more expressions internally */
 export interface Stmt {
 	kind: NodeType;
 }
 
-/**
- * Defines a block which contains many statements.
- * -  Only one program will be contained in a file.
+/*
+ Defines a block which contains many statements.
+  -  Only one program will be contained in a file.
  */
 export interface Program extends Stmt {
 	kind: "Program";
@@ -44,7 +40,7 @@ export interface FunctionDeclaration extends Stmt {
 	body: Stmt[];
 }
 
-/**  Expressions will result in a value at runtime unlike Statements */
+/* Expressions will result in a value at runtime unlike Statements */
 export interface Expr extends Stmt {}
 
 export interface AssignmentExpr extends Expr {
@@ -53,10 +49,10 @@ export interface AssignmentExpr extends Expr {
 	value: Expr;
 }
 
-/**
- * A operation with two sides seperated by a operator.
- * Both sides can be ANY Complex Expression.
- * - Supported Operators -> + | - | / | * | %
+/*
+ A operation with two sides seperated by a operator.
+  Both sides can be ANY Complex Expression.
+  - Supported Operators -> + | - | / | * | %
  */
 export interface BinaryExpr extends Expr {
 	kind: "BinaryExpr";
@@ -79,16 +75,16 @@ export interface MemberExpr extends Expr {
 }
 
 // LITERAL / PRIMARY EXPRESSION TYPES
-/**
- * Represents a user-defined variable or symbol in source.
+/*
+ Represents a user-defined variable or symbol in source.
  */
 export interface Identifier extends Expr {
 	kind: "Identifier";
 	symbol: string;
 }
 
-/**
- * Represents a numeric constant inside the soure code.
+/*
+  Represents a numeric constant inside the soure code.
  */
 export interface NumericLiteral extends Expr {
 	kind: "NumericLiteral";

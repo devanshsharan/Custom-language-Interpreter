@@ -1,0 +1,114 @@
+/* Basic reset for margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #1e1e1e; /* Dark theme background */
+    color: #dcdcdc; /* Light text color for contrast */
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #252526; /* Darker box for content */
+    border-radius: 8px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #4A90E2;
+    margin-bottom: 20px;
+}
+
+.editor-container {
+    display: flex;
+    flex-direction: column;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    resize: none; /* Disable resizing for better layout */
+    background-color: #333; /* Dark background for textarea */
+    color: #f8f8f2; /* Light text color */
+}
+
+textarea:focus {
+    border-color: #4A90E2;
+    outline: none;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px; /* Space between run and reset buttons */
+    margin-top: 10px; /* Add space above the button group */
+}
+
+button {
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #357ABD;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #4A90E2; /* Title color for Output */
+}
+
+.output {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #272727; /* Dark background for output */
+    border: 1px solid #555;
+    border-radius: 4px;
+    white-space: pre-wrap; /* Allows for proper formatting */
+    overflow-x: auto; /* Adds horizontal scroll if needed */
+    color: #f8f8f2; /* Light text color */
+}
+
+.button-container {
+    position: fixed; /* Fix the position to the left */
+    left: 20px; /* Distance from the left edge */
+    top: 100px; /* Distance from the top */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between buttons */
+    z-index: 10; /* Ensure buttons are above other content */
+}
+
+.code-button {
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.code-button:hover {
+    background-color: #357ABD;
+}
+
