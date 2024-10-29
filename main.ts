@@ -18,17 +18,17 @@ export async function runCode(input: string) {
       console.log(output);
         if (output.trim()) {
           console.log(101)
-            return `Output:\n${output}`; 
+            return `Output:\n\n${output}`; 
         } else {
           console.log(102)
-            return `Output:\n${JSON.stringify(result, null, 2)}`;
+            return `Output:\n\n${JSON.stringify(result, null, 2)}`;
         }
   } catch (error) {
     const outputt = getOutput();
     console.log(outputt);
     if (outputt.trim()) {
       console.log(103)
-        return `Output:\n${outputt}\nError: ${error.message}`; // Show output before the error
+        return `Output:\n\n${outputt}\nError: ${error.message}`; // Show output before the error
     }
     console.log(104)
     // If no output was accumulated, just show the error

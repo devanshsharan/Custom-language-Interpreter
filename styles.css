@@ -1,4 +1,4 @@
-/* Basic reset for margins and paddings */
+
 * {
     margin: 0;
     padding: 0;
@@ -7,17 +7,27 @@
 
 body {
     font-family: 'Courier New', Courier, monospace;
-    background-color: #1e1e1e; /* Dark theme background */
-    color: #dcdcdc; /* Light text color for contrast */
+    background-color: #1e1e1e; 
+    color: #dcdcdc; 
     padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+.box1{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 50px;
+    width: 1050px;
 }
 
 .container {
-    max-width: 800px;
+    width: 900px;
     margin: 0 auto;
-    background-color: #252526; /* Darker box for content */
+    background-color: #252526; 
     border-radius: 8px;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7); 
     padding: 20px;
 }
 
@@ -27,6 +37,11 @@ h1 {
     margin-bottom: 20px;
 }
 
+h2 {
+    margin-top: 20px;
+    color: #4A90E2;
+}
+
 .editor-container {
     display: flex;
     flex-direction: column;
@@ -34,15 +49,16 @@ h1 {
 
 textarea {
     width: 100%;
-    height: 200px;
+    height: 400px; 
     padding: 10px;
     border: 1px solid #555;
     border-radius: 4px;
     font-family: monospace;
-    font-size: 14px;
-    resize: none; /* Disable resizing for better layout */
-    background-color: #333; /* Dark background for textarea */
-    color: #f8f8f2; /* Light text color */
+    font-size: 16px;
+    resize: none; 
+    background-color: #333; 
+    color: #f8f8f2;
+    transition: border-color 0.3s ease; 
 }
 
 textarea:focus {
@@ -52,8 +68,9 @@ textarea:focus {
 
 .button-group {
     display: flex;
-    gap: 10px; /* Space between run and reset buttons */
-    margin-top: 10px; /* Add space above the button group */
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center; 
 }
 
 button {
@@ -64,51 +81,92 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 
 button:hover {
     background-color: #357ABD;
+    transform: translateY(-2px);
 }
 
-h2 {
-    margin-top: 20px;
-    color: #4A90E2; /* Title color for Output */
+button:focus {
+    outline: 2px solid #4A90E2; 
 }
 
 .output {
     margin-top: 10px;
-    padding: 10px;
-    background-color: #272727; /* Dark background for output */
+    padding: 15px;
+    background-color: #272727;
     border: 1px solid #555;
     border-radius: 4px;
-    white-space: pre-wrap; /* Allows for proper formatting */
-    overflow-x: auto; /* Adds horizontal scroll if needed */
-    color: #f8f8f2; /* Light text color */
+    white-space: pre-wrap;
+    overflow-x: auto;
+    color: #f8f8f2;
+    font-family: 'Courier New', Courier, monospace; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .button-container {
-    position: fixed; /* Fix the position to the left */
-    left: 20px; /* Distance from the left edge */
-    top: 100px; /* Distance from the top */
+    width: 159px;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Space between buttons */
-    z-index: 10; /* Ensure buttons are above other content */
+    gap: 10px;
+    align-items: flex-end; 
+    margin-bottom: 10px; 
 }
 
 .code-button {
-    background-color: #4A90E2;
+    width: 70%;
     color: white;
     border: none;
     padding: 10px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; 
 }
+
+.code-button:nth-child(2) { background-color: #FF5733; } /* Bright Red */
+.code-button:nth-child(3) { background-color: #FF8C00; } /* Vivid Orange */
+.code-button:nth-child(4) { background-color: #FFD700; } /* Golden Yellow */
+.code-button:nth-child(5) { background-color: #4CAF50; } /* Medium Green */
+.code-button:nth-child(6) { background-color: #00BCD4; } /* Light Blue */
+.code-button:nth-child(7) { background-color: #2196F3; } /* Bright Blue */
+.code-button:nth-child(8) { background-color: #9C27B0; } /* Vibrant Purple */
+.code-button:nth-child(9) { background-color: #FF4081; } /* Bright Pink */
 
 .code-button:hover {
-    background-color: #357ABD;
+    opacity: 0.9;
+    transform: translateY(-2px);
 }
 
+.code-button:focus {
+    outline: 2px solid #4A90E2; 
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px; 
+    }
+
+    textarea {
+        height: 300px; 
+    }
+
+    button {
+        padding: 8px 12px; 
+    }
+
+    .code-button {
+        font-size: 12px; 
+    }
+
+    .box1 {
+        flex-direction: column; 
+        width: 100%; 
+    }
+}
+
+:focus {
+    outline: 2px solid #4A90E2;
+}
