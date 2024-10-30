@@ -30,6 +30,7 @@ import {
 export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
 	switch (astNode.kind) {
 		case "NumericLiteral":
+			console.log(astNode);
 			return {
 				value: (astNode as NumericLiteral).value,
 				type: "number",

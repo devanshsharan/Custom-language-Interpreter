@@ -30,8 +30,11 @@ function eval_numeric_binary_expr(
 	} else if (operator == "*") {
 		result = lhs.value * rhs.value;
 	} else if (operator == "/") {
-		// TODO: Division by zero checks
+		if(rhs.value == 0){
+			throw new Error("denominator can't be zero");
+		}
 		result = lhs.value / rhs.value;
+		
 	} else {
 		result = lhs.value % rhs.value;
 	}
@@ -73,6 +76,7 @@ export function eval_binary_expr(
 ): RuntimeVal {
 	const lhs = evaluate(binop.left, env);
 	const rhs = evaluate(binop.right, env);
+	
 
 	// Only currently support numeric operations
 	if (lhs.type == "number" && rhs.type == "number") {
@@ -82,6 +86,7 @@ export function eval_binary_expr(
 			binop.operator
 		);
 	}
+	//console.log("check1");
 
 	// One or both are NULL
 	return MK_NULL();

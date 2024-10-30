@@ -17,9 +17,9 @@ export function createGlobalEnv() {
 	env.declareVar(
 		"print",
 		MK_NATIVE_FN((args, scope) => {
-      console.log(...args);
+      //console.log(...args);
 			const message = args.map(arg => JSON.stringify(arg)).join(" ");
-      console.log(message + 1);
+      //console.log(message + 1);
       appendOutput(message);
 			return MK_NULL();
 		}),
@@ -58,8 +58,8 @@ export default class Environment {
 		if (constant) {
 			this.constants.add(varname);
 		}
-    console.log(value);
-    console.log(99);
+    //console.log(value);
+    //console.log(99);
 		return value;
 	}
 

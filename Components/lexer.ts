@@ -100,7 +100,7 @@ export function tokenize(sourceCode: string): Token[] {
 				while (src.length > 0 && isint(src[0])) {
 					num += src.shift();
 				}
-
+				console.log(num);
 				tokens.push(token(num, TokenType.Number));
 			} 
 			else if (isalpha(src[0])) {

@@ -80,7 +80,7 @@ export default class Parser {
 		const params: string[] = [];
 		for (const arg of args) {
 			if (arg.kind !== "Identifier") {
-				console.log(arg);
+				//console.log(arg);
 				throw new Error("Inside function declaration expected parameters to be of type string.");
 			}
 
@@ -126,7 +126,7 @@ export default class Parser {
 		if (this.at().type == TokenType.Semicolon) {
 			this.eat(); 
       const outputt = getOutput();
-      console.log(outputt);
+      //console.log(outputt);
 			if (isConstant) {
 				throw new Error("Must assigne value to constant expression. No value provided.");
 			}
@@ -276,8 +276,8 @@ export default class Parser {
 		if (this.at().type == TokenType.OpenParen) {
 			call_expr = this.parse_call_expr(call_expr);
 		}
-    console.log(call_expr);
-    console.log(4);
+    //console.log(call_expr);
+    //console.log(4);
 		return call_expr;
 	}
 
